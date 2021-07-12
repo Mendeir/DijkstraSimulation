@@ -15,7 +15,10 @@ public class Input_Window extends JFrame implements ActionListener{
     String [] paths = {"A","B","C","D","E","F"};
     int row = 0;
     int column = 0;
+    public static int arrayCounter = 0;
     int [][] graphValues;
+    int [][] displayDistanceCollection;
+    int [][][] displayPathCollection;
 
 
     // Instantiation of Objects for GUI
@@ -24,8 +27,9 @@ public class Input_Window extends JFrame implements ActionListener{
     JPanel panelMenu = new JPanel();
     JPanel panelMatrix = new JPanel();
     JPanel panelPath = new JPanel();
-    JLabel displayValues = new JLabel();
-    JLabel labelPath = new JLabel();
+    JLabel [][] displayValues;
+    JLabel labelPathRow;
+    JLabel labelPathColumn;
     JButton randomButton = new JButton("Random");
     JButton enterButton = new JButton("Enter");
     JButton left = new JButton("<");
@@ -38,7 +42,7 @@ public class Input_Window extends JFrame implements ActionListener{
     Input_Window(){
         // Frame sizes and formats
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setBounds(200,20,1000,700);
+        frame.setBounds(200,20,800,700);
         frame.setLayout(null);
 
         // Formats for display outputs
@@ -46,17 +50,14 @@ public class Input_Window extends JFrame implements ActionListener{
         gbc.insets = new Insets(5, 5, 5, 5);
 
         // Panel bounds and formats
-        panelMenu.setBounds(0,0,1000,100);
+        panelMenu.setBounds(0,0,800,100);
         panelMenu.setLayout(null);
-        panelMenu.setBackground(Color.RED);
-
-        panelMatrix.setBounds(0,100,800,600);
-        panelMatrix.setBackground(Color.BLUE);
+        panelMatrix.setBounds(0,100,600,600);
         panelMatrix.setLayout(new GridBagLayout());
-
-        panelPath.setBounds(800,100,200,600);
+        panelMatrix.setBackground(Color.WHITE);
+        panelPath.setBounds(600,100,200,600);
         panelPath.setLayout(null);
-        panelPath.setBackground(Color.yellow);
+        panelPath.setBackground(Color.WHITE);
 
         // ComboBox design and contents
         matrixSize.setBounds(100,30,80,30);
@@ -112,16 +113,60 @@ public class Input_Window extends JFrame implements ActionListener{
 
         // Enter button action
         if(e.getSource() == enterButton){
+            try {
+                graphValues = new int[row][column];
 
-            graphValues = new int[row][column];
-
-            for(int i=0;i<row;i++){
-                for(int j=0;j<column;j++){
-                    graphValues[i][j] =Integer.parseInt(matrixValues[i][j].getText());
+                for (int i = 0; i < row; i++) {
+                    for (int j = 0; j < column; j++) {
+                        graphValues[i][j] = Integer.parseInt(matrixValues[i][j].getText());
+                    }
                 }
+
+                displayEnteredValues(graphValues);
+                logic.dijkstraProcess(graphValues);
+
+                displayDistanceCollection = logic.getDistancesCollection();
+                displayPathCollection = logic.getPathCollection();
+            }catch (NumberFormatException er){
+                ErrorWindow error = new ErrorWindow();
+            }
+        }
+
+        // Action for next button
+        if(e.getSource() == right){
+            panelMatrix.removeAll();
+            panelMatrix.revalidate();
+            panelPath.removeAll();
+            panelPath.revalidate();
+            frame.repaint();
+
+
+            if(arrayCounter != graphValues.length)
+                arrayCounter++;
+            if (arrayCounter < graphValues.length) {
+                displayPathProcess(arrayCounter);
+                displayProcess(graphValues,arrayCounter);
+            }else {
+
             }
 
-            logic.dijkstraProcess(graphValues);
+
+
+        }
+
+        // Action for previous button
+        if(e.getSource() == left){
+            panelMatrix.removeAll();
+            panelMatrix.revalidate();
+            panelPath.removeAll();
+            panelPath.revalidate();
+            frame.repaint();
+
+            if(arrayCounter != 0)
+                arrayCounter--;
+
+            displayProcess(graphValues,arrayCounter);
+            displayPathProcess(arrayCounter);
         }
 
     }
@@ -143,5 +188,81 @@ public class Input_Window extends JFrame implements ActionListener{
                 matrixValues[i][j].setHorizontalAlignment(JTextField.CENTER);
             }
         }
+    }
+
+    // Method for displaying user's inputs
+    public void displayEnteredValues(int [][] val){
+        displayValues = new JLabel[row][column];
+        panelMatrix.removeAll();
+        panelMatrix.revalidate();
+        panelMatrix.setLayout(null);
+        frame.repaint();
+
+        for (int i = 1; i <= row ; i++) {
+            for (int j = 1; j <= column ; j++) {
+
+                displayValues[i-1][j-1] = new JLabel(Integer.toString(val[i-1][j-1]),JLabel.CENTER);
+                labelPathRow = new JLabel(paths[j-1],JLabel.CENTER);
+                labelPathColumn = new JLabel(paths[i-1],JLabel.CENTER);
+                displayValues[i-1][j-1].setBounds(i*60,j*60,60,60);
+                labelPathRow.setBounds(0,j*60,60,60);
+                labelPathColumn.setBounds(i*60,0,60,60);
+                displayValues[i-1][j-1].setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                displayValues[i-1][j-1].setOpaque(true);
+                panelMatrix.add(displayValues[i-1][j-1]);
+                panelMatrix.add(labelPathRow);
+                panelMatrix.add(labelPathColumn);
+
+            }
+        }
+    }
+
+    // Method for displaying each process
+    public void displayProcess(int [][] val, int counter){
+        panelMatrix.removeAll();
+        panelMatrix.revalidate();
+        frame.repaint();
+
+        for (int i = 1; i <= row ; i++) {
+            for (int j = 1; j <= column ; j++) {
+                labelPathRow = new JLabel(paths[j-1],JLabel.CENTER);
+                labelPathColumn = new JLabel(paths[i-1],JLabel.CENTER);
+                labelPathRow.setBounds(0,j*60,60,60);
+                labelPathColumn.setBounds(i*60,0,60,60);
+
+                displayValues[i-1][j-1] = new JLabel(Integer.toString(val[i-1][j-1]),JLabel.CENTER);
+                displayValues[i-1][j-1].setBounds(i*60,j*60,60,60);
+
+                //if(val[i-1][j-1] == displayPathCollection[counter][i-1][j-1])
+                    //displayValues[i-1][j-1].setBackground(Color.RED);
+
+                displayValues[i-1][j-1].setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                displayValues[i-1][j-1].setOpaque(true);
+
+
+                panelMatrix.add(displayValues[i-1][j-1]);
+                panelMatrix.add(labelPathRow);
+                panelMatrix.add(labelPathColumn);
+
+            }
+        }
+    }
+
+    // Method for displaying the path process
+    public void displayPathProcess(int counter){
+        panelPath.removeAll();
+        panelPath.revalidate();
+        frame.repaint();
+
+        for(int j=0;j<column;j++){
+            if(displayDistanceCollection[counter][j] == Integer.MAX_VALUE)
+                labelPathRow = new JLabel(paths[j] + ": " + "INF",JLabel.CENTER);
+            else
+                labelPathRow = new JLabel(paths[j] + ": " + String.valueOf(displayDistanceCollection[counter][j]),JLabel.CENTER);
+
+            labelPathRow.setBounds(0,j*50,90,90);
+            panelPath.add(labelPathRow);
+        }
+
     }
 }

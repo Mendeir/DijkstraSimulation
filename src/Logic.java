@@ -98,4 +98,8 @@ public class Logic {
 
         return minimumIndex;
     }
+
+    public int [][] getDistancesCollection() { return distancesCollection; }
+
+    public int [][][] getPathCollection() { return pathCollection; }
 }
