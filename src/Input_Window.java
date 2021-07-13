@@ -146,12 +146,10 @@ public class Input_Window extends JFrame implements ActionListener{
             if (arrayCounter < graphValues.length) {
                 displayPathProcess(arrayCounter);
                 displayProcess(graphValues,arrayCounter);
+
             }else {
 
             }
-
-
-
         }
 
         // Action for previous button
@@ -181,8 +179,8 @@ public class Input_Window extends JFrame implements ActionListener{
         for(int i=0;i<x;i++){
             for(int j=0;j<y;j++){
                 matrixValues[i][j] = new JTextField(3);
-                gbc.gridx = j;
-                gbc.gridy = i;
+                gbc.gridx = i;
+                gbc.gridy = j;
                 matrixValues[i][j].setFont(new Font("Arial", Font.PLAIN, 15));
                 panelMatrix.add(matrixValues[i][j], gbc);
                 matrixValues[i][j].setHorizontalAlignment(JTextField.CENTER);
