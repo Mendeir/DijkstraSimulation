@@ -17,7 +17,7 @@ public class Logic {
         ArrayList<Integer> pathY = new ArrayList<Integer>();
 
         distancesCollection = new int[numberOfVertex][numberOfVertex];
-        pathCollection = new int[numberOfVertex][2][numberOfVertex+1];
+        pathCollection = new int[numberOfVertex][2][numberOfVertex];
 
         //Initialize distance as inf and includedInPath as false
         //Max integer value will represent as INF
@@ -30,12 +30,10 @@ public class Logic {
 
         //Assign the first distance to 0
         distance[0] = 0;
-        pathCollection[0][0][1] = 1;
-        pathCollection[0][1][1] = 1;
-        pathX.add(-1);
-        pathY.add(-1);
-        pathX.add(1);
-        pathY.add(1);
+        pathCollection[0][0][0] = 0;
+        pathCollection[0][1][0] = 0;
+        pathX.add(0);
+        pathY.add(0);
 
         //Calculate the shortestPath
         for (int counter = 0; counter < numberOfVertex; ++counter) {
@@ -43,8 +41,8 @@ public class Logic {
 
             //Add the current path to the collection
             if (counter != 0) {
-                pathY.add(minimumDistanceIndex + 1);
-                pathX.add(pathY.get((counter + 1) - 1));
+                pathY.add(minimumDistanceIndex);
+                pathX.add(pathY.get(counter - 1));
 
                 for (int pathCounter = 0; pathCounter < pathX.size(); ++pathCounter) {
                     pathCollection[counter][0][pathCounter] = pathX.get(pathCounter);
@@ -100,7 +98,6 @@ public class Logic {
 
         return minimumIndex;
     }
-
     public int [][] getDistancesCollection() { return distancesCollection; }
 
     public int [][][] getPathCollection() { return pathCollection; }

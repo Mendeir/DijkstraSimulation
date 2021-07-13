@@ -222,6 +222,7 @@ public class Input_Window extends JFrame implements ActionListener{
         frame.repaint();
 
         for (int i = 1; i <= row ; i++) {
+            boolean displayed = false;
             for (int j = 1; j <= column ; j++) {
                 labelPathRow = new JLabel(paths[j-1],JLabel.CENTER);
                 labelPathColumn = new JLabel(paths[i-1],JLabel.CENTER);
@@ -231,17 +232,9 @@ public class Input_Window extends JFrame implements ActionListener{
                 displayValues[i-1][j-1] = new JLabel(Integer.toString(val[i-1][j-1]),JLabel.CENTER);
                 displayValues[i-1][j-1].setBounds(i*60,j*60,60,60);
 
-                if (displayPathCollection[4][0][j] != -1) {
-                    System.out.println("i: " + i);
-                    if(i == displayPathCollection[4][0][j]) {
-                        if (j == displayPathCollection[4][1][j]) {
-                            System.out.println("Called");
-                            System.out.println("i: " + i);
-                            System.out.println("j: " + j);
-                            displayValues[i-1][j-1].setBackground(Color.RED);
-                        }
-                    }
-
+                if (displayPathCollection[arrayCounter][0][j - 1] != -1) {
+                    if (contains(j - 1, i - 1, arrayCounter))
+                        displayValues[i-1][j-1].setBackground(Color.RED);
                 }
 
                 displayValues[i-1][j-1].setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -254,6 +247,20 @@ public class Input_Window extends JFrame implements ActionListener{
 
             }
         }
+    }
+
+    //Check if contains
+    public boolean contains(int i, int j, int arrayCounter) {
+        boolean contains = false;
+
+        for (int columnCounter = 0; columnCounter < column; ++columnCounter) {
+            if (displayPathCollection[arrayCounter][0][columnCounter] == i && displayPathCollection[arrayCounter][1][columnCounter] == j) {
+                contains = true;
+                break;
+            }
+        }
+
+        return contains;
     }
 
     // Method for displaying the path process
