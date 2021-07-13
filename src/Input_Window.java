@@ -231,8 +231,18 @@ public class Input_Window extends JFrame implements ActionListener{
                 displayValues[i-1][j-1] = new JLabel(Integer.toString(val[i-1][j-1]),JLabel.CENTER);
                 displayValues[i-1][j-1].setBounds(i*60,j*60,60,60);
 
-                //if(val[i-1][j-1] == displayPathCollection[counter][i-1][j-1])
-                    //displayValues[i-1][j-1].setBackground(Color.RED);
+                if (displayPathCollection[4][0][j] != -1) {
+                    System.out.println("i: " + i);
+                    if(i == displayPathCollection[4][0][j]) {
+                        if (j == displayPathCollection[4][1][j]) {
+                            System.out.println("Called");
+                            System.out.println("i: " + i);
+                            System.out.println("j: " + j);
+                            displayValues[i-1][j-1].setBackground(Color.RED);
+                        }
+                    }
+
+                }
 
                 displayValues[i-1][j-1].setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 displayValues[i-1][j-1].setOpaque(true);

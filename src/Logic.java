@@ -43,8 +43,8 @@ public class Logic {
 
             //Add the current path to the collection
             if (counter != 0) {
-                pathY.add(minimumDistanceIndex);
-                pathX.add(pathY.get(counter - 1));
+                pathY.add(minimumDistanceIndex + 1);
+                pathX.add(pathY.get((counter + 1) - 1));
 
                 for (int pathCounter = 0; pathCounter < pathX.size(); ++pathCounter) {
                     pathCollection[counter][0][pathCounter] = pathX.get(pathCounter);
