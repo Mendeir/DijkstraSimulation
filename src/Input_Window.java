@@ -15,7 +15,7 @@ public class Input_Window extends JFrame implements ActionListener{
     String [] paths = {"A","B","C","D","E","F"};
     int row = 0;
     int column = 0;
-    public static int arrayCounter = 0;
+    public static int arrayCounter = -1;
     int [][] graphValues;
     int [][] displayDistanceCollection;
     int [][][] displayPathCollection;
@@ -116,17 +116,19 @@ public class Input_Window extends JFrame implements ActionListener{
             try {
                 graphValues = new int[row][column];
 
+                // Storing the values from the text field
                 for (int i = 0; i < row; i++) {
                     for (int j = 0; j < column; j++) {
                         graphValues[i][j] = Integer.parseInt(matrixValues[i][j].getText());
                     }
                 }
 
+                // Calling tge methods for displaying the values and the class for algorithm process
                 displayEnteredValues(graphValues);
                 logic.dijkstraProcess(graphValues);
-
                 displayDistanceCollection = logic.getDistancesCollection();
                 displayPathCollection = logic.getPathCollection();
+
             }catch (NumberFormatException er){
                 ErrorWindow error = new ErrorWindow();
             }
@@ -140,16 +142,15 @@ public class Input_Window extends JFrame implements ActionListener{
             panelPath.revalidate();
             frame.repaint();
 
-
-            if(arrayCounter != graphValues.length)
+            // next button process
+            if(arrayCounter != graphValues.length-1)
                 arrayCounter++;
             if (arrayCounter < graphValues.length) {
                 displayPathProcess(arrayCounter);
                 displayProcess(graphValues,arrayCounter);
 
-            }else {
-
             }
+
         }
 
         // Action for previous button
@@ -160,6 +161,7 @@ public class Input_Window extends JFrame implements ActionListener{
             panelPath.revalidate();
             frame.repaint();
 
+            // Previous button process
             if(arrayCounter != 0)
                 arrayCounter--;
 
@@ -179,8 +181,8 @@ public class Input_Window extends JFrame implements ActionListener{
         for(int i=0;i<x;i++){
             for(int j=0;j<y;j++){
                 matrixValues[i][j] = new JTextField(3);
-                gbc.gridx = i;
-                gbc.gridy = j;
+                gbc.gridx = j;
+                gbc.gridy = i;
                 matrixValues[i][j].setFont(new Font("Arial", Font.PLAIN, 15));
                 panelMatrix.add(matrixValues[i][j], gbc);
                 matrixValues[i][j].setHorizontalAlignment(JTextField.CENTER);
@@ -198,8 +200,7 @@ public class Input_Window extends JFrame implements ActionListener{
 
         for (int i = 1; i <= row ; i++) {
             for (int j = 1; j <= column ; j++) {
-
-                displayValues[i-1][j-1] = new JLabel(Integer.toString(val[i-1][j-1]),JLabel.CENTER);
+                displayValues[i-1][j-1] = new JLabel(Integer.toString(val[j-1][i-1]),JLabel.CENTER);
                 labelPathRow = new JLabel(paths[j-1],JLabel.CENTER);
                 labelPathColumn = new JLabel(paths[i-1],JLabel.CENTER);
                 displayValues[i-1][j-1].setBounds(i*60,j*60,60,60);
@@ -229,7 +230,7 @@ public class Input_Window extends JFrame implements ActionListener{
                 labelPathRow.setBounds(0,j*60,60,60);
                 labelPathColumn.setBounds(i*60,0,60,60);
 
-                displayValues[i-1][j-1] = new JLabel(Integer.toString(val[i-1][j-1]),JLabel.CENTER);
+                displayValues[i-1][j-1] = new JLabel(Integer.toString(val[j-1][i-1]),JLabel.CENTER);
                 displayValues[i-1][j-1].setBounds(i*60,j*60,60,60);
 
                 if (displayPathCollection[arrayCounter][0][j - 1] != -1) {
